@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { vehicles, vehicleImages } from "@/server/db/schema";
-import { eq, desc, asc, and, gte, lte, sql } from "drizzle-orm";
+import { eq, desc, asc, and, gte, lte, sql, inArray } from "drizzle-orm";
 
 const sortOptions = z.enum([
   "newest",
@@ -136,4 +136,26 @@ export const vehicleRouter = createTRPCRouter({
       },
     });
   }),
+
+  getByIds: publicProcedure
+    .input(
+      z.object({
+        ids: z.array(z.string().uuid()).min(1).max(4),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const items = await ctx.db.query.vehicles.findMany({
+        where: inArray(vehicles.id, input.ids),
+        with: {
+          images: { orderBy: [asc(vehicleImages.sortOrder)] },
+          category: true,
+        },
+      });
+
+      // Preserve the order of the input IDs so the compare table is stable
+      const byId = new Map(items.map((item) => [item.id, item]));
+      return input.ids
+        .map((id) => byId.get(id))
+        .filter((v): v is NonNullable<typeof v> => v != null);
+    }),
 });

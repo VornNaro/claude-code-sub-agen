@@ -17,3 +17,6 @@ export type CartItem = RouterOutput["cart"]["get"][number];
 export type Order = RouterOutput["order"]["getAll"][number];
 
 export type Review = RouterOutput["review"]["getByVehicle"][number];
+
+export type VehicleCompareItem =
+  RouterOutput["vehicle"]["getByIds"][number];

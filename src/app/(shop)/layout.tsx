@@ -1,5 +1,7 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { SearchCommand } from "@/components/search/search-command";
+import { CompareBar } from "@/components/compare/compare-bar";
 
 export default function ShopLayout({
   children,
@@ -11,6 +13,8 @@ export default function ShopLayout({
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
+      <SearchCommand />
+      <CompareBar />
     </div>
   );
 }
