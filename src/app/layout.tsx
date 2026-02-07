@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TRPCProvider } from "@/trpc/provider";
@@ -43,12 +44,19 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased`}
         >
-          <NuqsAdapter>
-            <TRPCProvider>
-              {children}
-              <Toaster />
-            </TRPCProvider>
-          </NuqsAdapter>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NuqsAdapter>
+              <TRPCProvider>
+                {children}
+                <Toaster />
+              </TRPCProvider>
+            </NuqsAdapter>
+          </ThemeProvider>
         </body>
       </html>
     </AuthProvider>
