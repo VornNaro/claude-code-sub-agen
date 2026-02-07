@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Search, ShoppingCart, GitCompareArrows } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ export function HeaderActions() {
   const itemCount = useCartStore((s) => s.items.length);
   const compareCount = useCompareStore((s) => s.vehicleIds.length);
   const [cartOpen, setCartOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <div className="flex items-center gap-1">
@@ -28,7 +30,7 @@ export function HeaderActions() {
       <Button variant="ghost" size="icon" className="relative" asChild>
         <Link href="/compare">
           <GitCompareArrows className="h-5 w-5" />
-          {compareCount > 0 && (
+          {mounted && compareCount > 0 && (
             <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
               {compareCount}
             </span>
@@ -45,7 +47,7 @@ export function HeaderActions() {
         aria-label="Open cart"
       >
         <ShoppingCart className="h-5 w-5" />
-        {itemCount > 0 && (
+        {mounted && itemCount > 0 && (
           <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">
             {itemCount}
           </span>
